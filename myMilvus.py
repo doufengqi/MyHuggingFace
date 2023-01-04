@@ -1,48 +1,39 @@
-
-# 保存到milvus
+import csv
 from pymilvus import connections, FieldSchema, CollectionSchema, DataType, Collection
 
 # 连接milvus
 connections.connect(host='127.0.0.1', port='19530')  # host为milvus的ip地址，port为milvus的端口号
 
-# 创建collection 用于存储句子向量
-collection_name = 'sentence_embedding'
+# 创建collection
+collection_name = 'test_collection2'
 fields = [
-    FieldSchema(name="id", dtype=DataType.INT64, is_primary=True, auto_id=True),
-    FieldSchema(name="embedding", dtype=DataType.FLOAT_VECTOR, dim=384)  # 句子向量 384维
+    FieldSchema(name="int64", dtype=DataType.INT64, is_primary=True, auto_id=True),
+    FieldSchema(name="float", dtype=DataType.FLOAT_VECTOR, dim=384),
+    # FieldSchema(name="text", dtype=DataType.VARCHAR, max_length=1000)
 ]
-schema = CollectionSchema(fields, description="sentence embedding")  # 创建collection 用于存储句子向量
+schema = CollectionSchema(fields=fields, description="test collection")
 collection = Collection(name=collection_name, schema=schema)
 
-# 插入数据
-collection.insert([sentence_embeddings.tolist()])
-print("insert data into milvus")
+# csv第一列为id，第二列为文本，第三列为向量
+with open('sentence_embeddings.csv', 'r', encoding='utf-8') as f:
+    reader = csv.reader(f)
+    for i, row in enumerate(reader):
+        # 强制转换为int64
+        row[0] = int(row[0])
+        # 强制转换为float_vector
+        row[2] = eval(row[2])  # [float(x) for x in row[2].strip('[]').split(',')]
+        # 强制转换为text
+        #  row[1] = str(row[1])
+        # 插入数据到milvus
+        collection.insert([[row[2]]])
+        print(i, row[1])
 
-# 从milvus中检索句子
-from pymilvus import connections, Collection, utility
-
-# 连接milvus
-connections.connect(host='127.0.0.1', port='19530')  # host为milvus的ip地址，port为milvus的端口号
-
-# 创建collection 用于存储句子向量
-collection_name = 'sentence_embedding'
-collection = Collection(name=collection_name)
-
-# 检索句子
-query = '到底该怎么定义'
-query_embedding = model(**tokenizer(query, padding=True, truncation=True, return_tensors='pt'))[0][0]
-query_embedding = F.normalize(query_embedding, p=2, dim=1)
-query_embedding = query_embedding.tolist()
-print("query embedding:")
-print(query_embedding)
-#
-# # 检索
-# # 向量检索
-# top_k = 5
-# search_params = {"metric_type": "L2", "params": {"nprobe": 10}}  # 表示 L2 距离，nprobe 表示搜索时的探测次数
-# # search参数分别
-# results = collection.search(query_embedding, "embedding", search_params, top_k)
-
-
-
-
+        #
+        # # 打开txt文件并写入milvus
+        # with open('sentence_embeddings.txt', 'r', encoding='utf-8') as f:
+        #     for i, line in enumerate(f):
+        #         # print(i, line)
+        #         vector = [float(i) for i in line.split(' ')]
+        #         collection.insert([[int(i), vector]])
+        # # 关闭连接
+        # connections.close()

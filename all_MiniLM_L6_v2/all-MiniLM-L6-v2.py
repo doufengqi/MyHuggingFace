@@ -42,10 +42,43 @@ sentence_embeddings = F.normalize(sentence_embeddings, p=2, dim=1)
 
 print("Sentence embeddings:")
 print(sentence_embeddings)
+#
+# # 将句子向量插入到milvus中
+#
+# # Connect to Milvus server
+# from pymilvus import connections, FieldSchema, CollectionSchema, DataType, Collection
+#
+# connections.connect(host='127.0.0.1', port='19530')  # host为milvus的ip地址，port为milvus的端口号
+#
+# # Create collection
+# collection_name = 'sentence_embeddings'
+# fields = [
+#     FieldSchema(name="int64", dtype=DataType.INT64, is_primary=True),
+#     FieldSchema(name="float", dtype=DataType.FLOAT_VECTOR, dim=384)
+# ]
+# schema = CollectionSchema(fields=fields, description="sentence embeddings")
+# collection = Collection(name=collection_name, schema=schema)
+#
+# # Insert data into Milvus
+# with open('sentence_embeddings.csv', 'w', encoding='utf-8') as f:
+#     writer = csv.writer(f)
+#     for i in range(len(sentences)):
+#         writer.writerow([i, sentence_embeddings[i].tolist()])
+#         collection.insert([[int(i), sentence_embeddings[i].tolist()]])
+#         print(i, sentences[i])
+#
+# # Close connection
+# connections.close()
 
 # 把向量和语句保存到csv 序号从0000000001开始
 with open('sentence_embeddings.csv', 'w', encoding='utf-8', newline='') as f:
     writer = csv.writer(f)
     for i, sentence in enumerate(sentences):
-        writer.writerow([i+1, sentence, sentence_embeddings[i].tolist()])
+        writer.writerow([i + 1, sentence, sentence_embeddings[i].tolist()])
 
+
+
+# # 保存到txt 从0000000001开始
+# with open('sentence_embeddings.txt', 'w', encoding='utf-8') as f:
+#     for i, sentence in enumerate(sentences):
+#         f.write(str(i + 1) + '\t' + str(sentence_embeddings[i].tolist()) + '\n')
