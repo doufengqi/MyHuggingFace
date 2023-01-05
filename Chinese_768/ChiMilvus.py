@@ -5,16 +5,14 @@ from pymilvus import connections, FieldSchema, CollectionSchema, DataType, Colle
 connections.connect(host='127.0.0.1', port='19530')  # host为milvus的ip地址，port为milvus的端口号
 
 # 创建collection
-collection_name = 'test_collection2'
+collection_name = 'test_collection'
 fields = [
     FieldSchema(name="int64", dtype=DataType.INT64, is_primary=True, auto_id=False),
-    FieldSchema(name="float", dtype=DataType.FLOAT_VECTOR, dim=384),
-    # FieldSchema(name="text", dtype=DataType.VARCHAR, max_length=1000)
+    FieldSchema(name="float", dtype=DataType.FLOAT_VECTOR, dim=768),
 ]
 schema = CollectionSchema(fields=fields, description="test collection")
 collection = Collection(name=collection_name, schema=schema)
 
-# csv第一列为id，第二列为文本，第三列为向量
 with open('sentence_embeddings.csv', 'r', encoding='utf-8') as f:
     reader = csv.reader(f)
     for i, row in enumerate(reader):
