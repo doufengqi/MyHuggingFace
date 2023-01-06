@@ -17,20 +17,20 @@ def mean_pooling(model_output, attention_mask):
 
 #
 # # 从文件中读取句子
-# sentences = []
+sentences = ['我是中国人']
 # with open('sentences.txt', 'r', encoding='utf-8') as f:
 #     for line in f:
 #         sentences.append(line.strip())
-
-# 从xls文件中读取句子
-sentences = []
-workbook = xlrd.open_workbook(r'../../data/sentences.xls')
-# 读取第一行第一列begin
-sheet = workbook.sheet_by_index(0)
-begin = sheet.cell(0, 0).value
-# 读取第二列存入sentences
-for i in range(0, sheet.nrows):
-    sentences.append(sheet.cell(i, 1).value)
+#
+# # 从xls文件中读取句子
+# sentences = []
+# workbook = xlrd.open_workbook(r'../../data/sentences.xls')
+# # 读取第一行第一列begin
+# sheet = workbook.sheet_by_index(0)
+# begin = sheet.cell(0, 0).value
+# # 读取第二列存入sentences
+# for i in range(0, sheet.nrows):
+#     sentences.append(sheet.cell(i, 1).value)
 
 # Load model from HuggingFace Hub
 tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/all-MiniLM-L6-v2')

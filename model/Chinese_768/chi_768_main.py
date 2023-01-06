@@ -6,7 +6,7 @@ sys.path.append(r'../../Mysql.py')
 
 from Mysql import mysql
 from chi_mod import chi_mod
-from ChiMilvus import milvus_insert
+from ChiMilvusInsert import milvus_insert
 
 
 def main():
