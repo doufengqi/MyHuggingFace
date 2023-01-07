@@ -2,7 +2,7 @@ import csv
 from pymilvus import connections, FieldSchema, CollectionSchema, DataType, Collection
 
 
-def milvus_insert():
+def milvus_insert(dims):
     # 连接milvus
     connections.connect(host='127.0.0.1', port='19530')  # host为milvus的ip地址，port为milvus的端口号
 
@@ -11,12 +11,12 @@ def milvus_insert():
     fields = [
         # 从1开始生成id
         FieldSchema(name="int64", dtype=DataType.INT64, is_primary=True, auto_id=False),  # id 为主键 且为int64类型 且为自增
-        FieldSchema(name="float", dtype=DataType.FLOAT_VECTOR, dim=768),
+        FieldSchema(name="float", dtype=DataType.FLOAT_VECTOR, dim=dims),
     ]
     schema = CollectionSchema(fields=fields, description="c_talk_test")
     collection = Collection(name=collection_name, schema=schema)
 
-    with open('../../data/out/chiOut.csv', 'r', encoding='utf-8') as f:
+    with open('data/out/vector_out.csv', 'r', encoding='utf-8') as f:
         # 读取csv第一行第一列和第一列最后一行存于begin和end中
         reader = csv.reader(f)
         my_vector = []
@@ -45,3 +45,6 @@ def milvus_insert():
             "params": {"nlist": 1024}
         }
     )
+
+    # 关闭连接 alias
+    connections.disconnect(alias='default')
