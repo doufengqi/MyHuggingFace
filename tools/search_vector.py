@@ -1,14 +1,11 @@
-import csv
 import time
-import numpy as np
 import pandas as pd
 import pymysql
 from text2vec import SentenceModel
-from pymilvus import connections, Collection, utility
-from sklearn.metrics.pairwise import cosine_similarity
+from pymilvus import connections, Collection
 
 
-def search_vector(question):
+def search_vector(model, question):
     # 连接milvus
     connections.connect(host='localhost', port='19530')  # host为milvus的ip地址，port为milvus的端口号
 
@@ -23,7 +20,11 @@ def search_vector(question):
     sentence = [question]
 
     # 转为向量
-    model = SentenceModel('shibing624/text2vec-base-chinese')
+    if model == '1':
+        model = SentenceModel('shibing624/text2vec-base-chinese')
+    elif model == '2':
+        model = SentenceModel('sentence-transformers/all-MiniLM-L6-v2')
+
     embeddings = model.encode(sentence)
 
     vector = embeddings[0].tolist()

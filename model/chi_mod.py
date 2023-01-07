@@ -1,6 +1,5 @@
 import csv
 import xlrd
-import xlwt as xlwt
 from text2vec import SentenceModel
 
 

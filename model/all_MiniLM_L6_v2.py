@@ -1,7 +1,5 @@
 import csv
 import xlrd
-import xlwt as xlwt
-from text2vec import SentenceModel
 from sentence_transformers import SentenceTransformer
 
 
@@ -18,7 +16,7 @@ def all_mini_l6v2():
 
     model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
     embeddings = model.encode(sentences)
-    print(embeddings)
+    # print(embeddings)
 
     # 将向量写入csv文件 第一列为id 第二列为向量 id从begin开始
     # 一行一行写入

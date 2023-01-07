@@ -10,7 +10,28 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\data\out\20230107213702_answer.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\data\out\20230107220435_answer.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\data\out\chiOut.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\data\out\vector_out.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

@@ -1,21 +1,24 @@
-# 定义主函数 调用chi_mod.py中的chi_mod函数
 import sys
 import pandas as pd
-from Mysql import mysql
+from tools.clean import clean
+from tools.Mysql import mysql
 from model.chi_mod import chi_mod
 from tools.milvus_insert import milvus_insert
-from model.all_MiniLM_L6_v2 import all_mini_l6v2
 from tools.search_vector import search_vector
+from model.all_MiniLM_L6_v2 import all_mini_l6v2
 
 
 def main():
-    print('请输入要查询的问题：')
+    print('请输入要查询的问题:')
     question = input()
     ###############################################################################
     # 选择进行向量化的模型
-    print('请选择向量化模型：')
+    print('请选择向量化模型:')
     print('1,Chinese_768')
     print('2,all_MiniLM_L6_v2')
+    print('3,清除缓存')
+    print('4,退出')
+    ###############################################################################
     dims = 0
     model = input()
     if model == '1':
@@ -28,6 +31,11 @@ def main():
         dims = 384
         all_mini_l6v2()
         print("文本向量化完成")
+    elif model == '3':
+        clean()
+        sys.exit(0)
+    elif model == '4':
+        sys.exit(0)
     else:
         print("输入错误")
         sys.exit()
@@ -42,7 +50,7 @@ def main():
     print("文本数据插入Mysql完成")
     ###############################################################################
     print("开始执行 Milvus检索")
-    answer_list = search_vector(question)
+    answer_list = search_vector(model, question)
     print("Milvus检索完成")
 
     answer_list = pd.array(answer_list)
